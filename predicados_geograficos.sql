@@ -1,3 +1,5 @@
+create extension postgis;
+
 -- INTERSECT
 
 ST_Intersects (geometry A, geometry B)
