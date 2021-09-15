@@ -1,2 +1,2 @@
-# Este es un repositorio de scripts de SQL para PostGIS
-Visita https://programapa.wordpress.com/ donde comparto herramientas y tutoriales de geoprogramación y sistemas de información geográfica
+# My SQL queries for PostGIS
+Visit https://programapa.wordpress.com/ 
