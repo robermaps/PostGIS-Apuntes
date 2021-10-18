@@ -3,7 +3,7 @@ CREATE EXTENSION postgis_topology;
 
 -- CREAR ESQUEMA TOPOLOGICO
 
-SELECT topology.CreateTopology('nombre_topología', SRC, tolerancia);
+SELECT topology.CreateTopology('nombre_topo', SRC, tolerancia); 
 
 -- AÑADIR COLUMNA TOPOGEOMETRICA
 
