@@ -1,4 +1,4 @@
-# Comenzando con PostGIS 🐘🌏
+# Apuntes de Postgre / PostGIS 🐘🌏
 
 <img src="https://programapa.files.wordpress.com/2021/07/predicados-espaciales-postgis.png" width="300" height="200" text-align: center></div>
 
