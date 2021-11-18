@@ -931,6 +931,9 @@ ON k.Inundado = f.Ayuda;
 </pre>
 <p>Resultado:</p>
   
+  <figure class="wp-block-table is-style-stripes"><table><thead><tr><th>ID</th><th>Prov</th><th>ID_Prov</th><th>Inundado</th><th>Ayuda</th></tr></thead><tbody><tr><td>1</td><td>Almería</td><td>1</td><td>Níjar</td><td>NULL</td></tr><tr><td>2</td><td>Murcia</td><td>2</td><td>San Javier</td><td>NULL</td></tr><tr><td>2</td><td>Murcia</td><td>2</td><td>Totana</td><td>Totana</td></tr><tr><td>2</td><td>Murcia</td><td>2</td><td>Torre Pacheco</td><td>Torre Pacheco</td></tr><tr><td>3</td><td>Alicante</td><td>3</td><td>San Miguel de Salinas</td><td>NULL</td></tr><tr><td>3</td><td>Alicante</td><td>3</td><td>Pilar de la Horadada</td><td>Pilar de la Horadada</td></tr><tr><td>4</td><td>Las Palmas</td><td>NULL</td><td>NULL</td><td>NULL</td></tr><tr><td>5</td><td>Santa Cruz</td><td>NULL</td><td>NULL</td><td>NULL</td></tr><tr><td>NULL</td><td>NULL</td><td>0</td><td>Ceuta</td><td>Ceuta</td></tr><tr><td>NULL</td><td>NULL</td><td>0</td><td>Melilla</td><td>NULL</td></tr></tbody></table></figure>
+
+  <br>
 </details>
 <details>
   <summary><strong>Subconsultas</strong></summary><br>
