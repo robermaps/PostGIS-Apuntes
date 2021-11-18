@@ -1,8 +1,10 @@
 # Apuntes de Postgre / PostGIS
 
 <img src="https://programapa.files.wordpress.com/2021/07/predicados-espaciales-postgis.png" width="300" height="200" text-align: center></div>
-
+<br>
 Por Rober J
+
+<br>
 
 <details>
   <summary><strong>Introducción a las bases de datos</strong></summary><br>
@@ -21,6 +23,7 @@ Por Rober J
 <p><strong>⚠ Algunas cuestiones básicas como las claves primarias o la integridad de los datos aún no las he tratado en este post</strong>(proximamente)</p>
  
 <br></details>
+
   
 ## DDL - Lenguaje de definición de datos 👷‍♀️
   
@@ -604,6 +607,7 @@ DROP TRIGGER nombre_trigger ON tabla;
 </pre>
   
 <br></details>
+
   
 ## DML - Lenguaje de manipulación de datos 🛠
   
@@ -1328,6 +1332,5 @@ osm2pgRouting --file C:\Users\usuario\Downloads\archivo.osm --dbname nombre_data
     
   <br></details>
 
-## ¡Sígueme!
+## ¡Sígueme! 🌐
 [![](https://img.shields.io/badge/@progra_mapa-white?style=for-the-badge&labelColor=blue&logo=Twitter&logoColor=white)](https://twitter.com/progra_mapa)[![](https://img.shields.io/badge/PrograMapa-grey?style=for-the-badge&logo=wordpress)](https://programapa.wordpress.com)[![](https://img.shields.io/badge/Roberto-blue?style=for-the-badge&logo=linkedin)](https://linkedin.com/in/robertojl)[![](https://img.shields.io/badge/@progra_mapa-white?style=for-the-badge&logo=instagram)](https://instagram.com/progra_mapa)
-
