@@ -20,7 +20,7 @@ Por Rober J
 <p>Por<strong> último, la documentación oficial y otros enlaces de utilidad para Postgre, SQL y PostGIS los recopilo en el siguiente post junto a otros muchos recursos:</p>
 <p><strong>⚠ Algunas cuestiones básicas como las claves primarias o la integridad de los datos aún no las he tratado en este post</strong>(proximamente)</p>
  
-</details>
+<br></details>
   
 ## DDL - Lenguaje de definición de datos 👷‍♀️
   
@@ -148,7 +148,7 @@ TRUNCATE TABLE tabla &#91;RESTRICT / CASCADE]
 <p>CASCADE vacía todas las tablas conectadas por la clave externa.</p>
   
   
-</details>
+<br></details>
 <details>
   <summary><strong>Esquemas</strong></summary><br>
   
@@ -185,7 +185,7 @@ DROP SCHEMA &#91;IF EXISTS] esquema &#91;RESTRICT / CASCADE]
 <p>Con CASCADE se elimina todo.</p>
 
   
-</details>
+<br></details>
 <details>
   <summary><strong>Restricciones</strong></summary><br>
   
@@ -228,7 +228,7 @@ ALTER TABLE &#91; IF EXISTS ] tabla DROP CONSTRAINT nombre_restricción &#91; RE
 <p>Con RESTRICT (por defecto) da error en caso de haber datos dependientes de la restricción. CASCADE borra la restricción junto a los datos dependientes de ella</p>
   
   
-</details>
+<br></details>
 <details>
   <summary><strong>Dominios</strong></summary><br>
   
@@ -309,7 +309,7 @@ ALTER DOMAIN dominio
 <p>Con IF EXISTS (solo en PostgreSQL) se evita error en caso de no existir.</p>
 <p>Por defecto se ejecuta RESTRICT para dar error en caso de existir objetos dependientes del dominio. CASCADE borra todos los objetos dependientes del dominio.</p>
   
-</details>
+<br></details>
 <details>
   <summary><strong>Tipos de datos</strong></summary><br>
   
@@ -335,7 +335,7 @@ ALTER DOMAIN dominio
 <h3><strong>Geometrías (solo con PostGIS)</strong></h3>
 <figure ><table><tbody><tr><td>geometry(tipo, SRC)</td><td>Variable</td><td>Almacena objetos geométricos simples (<em>Simple Feature</em>)<br><br>El <a href="https://programapa.wordpress.com/2020/11/06/tipos-de-datos-espaciales/">tipo</a> puede ser POINT, MULTIPOINT, LINESTRING, MULTILINESTRING, POLYGON y MULTIPOLYGON<br><br>SRC es el código del <a rel="noreferrer noopener" href="https://spatialreference.org/" target="_blank">sistema de referencia</a></td></tr><tr><td>topogeometry(tipo, SRC, tolerancia)</td><td>Variable</td><td>Almacena objetos topogeométricos<br><br>Al igual que las geometrías, su <a href="https://programapa.wordpress.com/2020/11/06/tipos-de-datos-espaciales/">tipo</a> puede ser también POINT, MULTIPOINT, LINESTRING, MULTILINESTRING, POLYGON y MULTIPOLYGON y también requieren de un <a rel="noreferrer noopener" href="https://spatialreference.org/" target="_blank">sistema de referencia</a><br><br>Sin embargo, la topogeometría requiere de una tolerancia clúster para realizar los cálculos. Su valor se dará en unidades del sistema</td></tr></tbody></table></figure>
   
-</details>
+<br></details>
 <details>
   <summary><strong>Operadores</strong></summary><br>
   
@@ -361,7 +361,7 @@ ALTER DOMAIN dominio
 <p>Permiten operar con texto o cadenas de caracteres, llamadas <em>string</em> en jerga informática.</p>
 <figure ><table><thead><tr><th>Operador</th><th>Descripción</th><th>Ejemplo</th><th>Resultado</th></tr></thead><tbody><tr><td>+</td><td>Concatena texto</td><td>&#8216;Corre&#8217; + &#8216;caminos&#8217;</td><td>Correcaminos</td></tr><tr><td>||</td><td>Concatena texto con otros datos que no sean text</td><td>&#8216;Valor: &#8216; || 200</td><td>Valor: 200</td></tr><tr><td>substr</td><td>Extrae subcadenas de texto indicando posiciones.</td><td>substr(&#8216;Correcaminos&#8217;, 0,1,2,3,4)</td><td>Corre</td></tr><tr><td>LIKE</td><td>Compara fragmentos de texto y devuelve TRUE en caso de coincidencia</td><td>municipio LIKE &#8216;Alm&#8217;</td><td>True para municipios que contengan &#8216;alm&#8217; en su nombre: Almería, Almunia&#8230;</td></tr></tbody></table></figure>
   
-</details>
+<br></details>
 <details>
   <summary><strong>Índices</strong></summary><br>
   
@@ -400,7 +400,7 @@ TABLESPACE pg_default;
 DROP INDEX nombre_del_índice
 </pre>
   
-</details>
+<br></details>
 <details>
   <summary><strong>Secuencias y serials</strong></summary><br>
   <div><figure ><img src="https://programapa.files.wordpress.com/2020/10/serials_sql.jpg?w=300" alt="" class="wp-image-2275" srcset="https://programapa.files.wordpress.com/2020/10/serials_sql.jpg?w=300 300w, https://programapa.files.wordpress.com/2020/10/serials_sql.jpg?w=600 600w, https://programapa.files.wordpress.com/2020/10/serials_sql.jpg?w=150 150w" sizes="(max-width: 300px) 100vw, 300px" /></figure>
@@ -457,7 +457,7 @@ ALTER SEQUENCE nombre_secuencia
 DROP SEQUENCE nombre_secuencia &#91;CASCADE];
 </pre>
   
-</details>
+<br></details>
 <details>
   <summary><strong>Vistas de datos</strong></summary><br>
   
@@ -498,7 +498,7 @@ SELECT MAX(columna3) FROM nombre_vista;
 DROP VIEW nombre_vista
 </pre>
   
-</details>
+<br></details>
 <details>
   <summary><strong>Funciones</strong></summary><br>
   
@@ -541,7 +541,7 @@ DROP FUNCTION &#91; IF EXISTS ] nombre_función&#91;(argumentos)]&#91;CASCADE]
 <p><strong>IF EXISTS</strong> evita que se genere error en caso de no existir la función</p>
 <p><strong>CASCADE </strong>borrará todos los elementos que dependan de la función que se va a eliminar.</p>
   
-</details>
+<br></details>
 <details>
   <summary><strong>Triggers</strong></summary><br>
   
@@ -603,9 +603,9 @@ EXECUTE PROCEDURE no_borrar();
 DROP TRIGGER nombre_trigger ON tabla;
 </pre>
   
-</details>
+<br></details>
   
-## DML - Lenguaje de manipulación de datos´🛠
+## DML - Lenguaje de manipulación de datos 🛠
   
 <details>
   <summary><strong>SELECT</strong></summary><br>
@@ -686,7 +686,7 @@ OFFSET 30
 <p>El<strong> orden </strong>en el que se deben escribir las cláusulas básicas SELECT dentro de una misma sentencia es el siguiente:</p>
 <ol><li>SELECT</li><li>FROM</li><li>WHERE</li><li>ORDER</li><li>LIMIT</li><li>OFFSET</li></ol>
   
-</details>
+<br></details>
 <details>
   <summary><strong>INSERT</strong></summary><br>
   
@@ -723,7 +723,7 @@ VALUES ('54548GL',200,'Barcelona',80),
 <p>Puede introducirse varios registros a la vez</p>
 <p>Si no se quiere introducir datos para alguna columna en un registro concreto y la columna lo permite se puede especificar con NULL</p>
   
-</details>
+<br></details>
 <details>
   <summary><strong>DELETE</strong></summary><br>
   
@@ -738,7 +738,7 @@ DELETE parcelas WHERE tamaño_m2 &lt; 1000 AND provincia = 'Salamanca'
 </pre>
 <ul><li>Elimina los registros de la tabla parcelas aquellas parcelas de Salamanca que tengan menos de 1000 metros cuadrados.</li></ul>
   
-</details>
+<br></details>
 <details>
   <summary><strong>UPDATE</strong></summary><br>
   
@@ -761,7 +761,7 @@ UPDATE parcelas SET valor_m2 = valor_m2 * 1.03
 </pre>
 <p>Aumenta el valor del m2 de las parcelas un 3% multiplicando su valor por 1.03</p>
   
-</details>
+<br></details>
 <details>
   <summary><strong>Consultar y agregar atributos</strong></summary><br>
   
@@ -831,7 +831,7 @@ ORDER BY recuento_nidos DESC;
 </pre>
 <p>Con este código obtendríamos el número de nidos de ave y de podas que se han encontrado en cada una de las especies, ordenado de mayor a menor número de nidos.</p>
   
-</details>
+<br></details>
 <details>
   <summary><strong>JOIN - Unir tablas </strong></summary><br>
   
@@ -933,8 +933,8 @@ ON k.Inundado = f.Ayuda;
   
   <figure class="wp-block-table is-style-stripes"><table><thead><tr><th>ID</th><th>Prov</th><th>ID_Prov</th><th>Inundado</th><th>Ayuda</th></tr></thead><tbody><tr><td>1</td><td>Almería</td><td>1</td><td>Níjar</td><td>NULL</td></tr><tr><td>2</td><td>Murcia</td><td>2</td><td>San Javier</td><td>NULL</td></tr><tr><td>2</td><td>Murcia</td><td>2</td><td>Totana</td><td>Totana</td></tr><tr><td>2</td><td>Murcia</td><td>2</td><td>Torre Pacheco</td><td>Torre Pacheco</td></tr><tr><td>3</td><td>Alicante</td><td>3</td><td>San Miguel de Salinas</td><td>NULL</td></tr><tr><td>3</td><td>Alicante</td><td>3</td><td>Pilar de la Horadada</td><td>Pilar de la Horadada</td></tr><tr><td>4</td><td>Las Palmas</td><td>NULL</td><td>NULL</td><td>NULL</td></tr><tr><td>5</td><td>Santa Cruz</td><td>NULL</td><td>NULL</td><td>NULL</td></tr><tr><td>NULL</td><td>NULL</td><td>0</td><td>Ceuta</td><td>Ceuta</td></tr><tr><td>NULL</td><td>NULL</td><td>0</td><td>Melilla</td><td>NULL</td></tr></tbody></table></figure>
 
-  <br>
-</details>
+  
+<br></details>
 <details>
   <summary><strong>Subconsultas</strong></summary><br>
   
@@ -1019,34 +1019,35 @@ WHERE altitud &gt; (SELECT AVG(altitud) FROM municipios);
 <p>Obtendríamos los nombres de los municipios cuya altitud supera a la media de altitud de todos los municipios.</p>
 <p>La altitud media es un dato que no conocemos pero que tampoco ha sido necesario que lo calculáramos previamente porque se ha utilizado la función de agregado AVG (calcula la media aritmética)</p>
   
-</details>
+<br></details>
   
 ## PostGIS 🐘🌏
 
 <details>
   <summary><strong>Datos geométricos</strong></summary><br>
   
-  </details>
+  <br></details>
   
 <details>
   <summary><strong>Predicados espaciales</strong></summary><br>
   
-  </details>
+  <br></details>
   
 <details>
   <summary><strong>Crear topología</strong></summary><br>
   
-  </details>
+  <br></details>
   
 <details>
   <summary><strong>Crear topología de red</strong></summary><br>
   
-  </details>
+  <br></details>
   
   <details>
   <summary><strong>Importar red viaria OSM</strong></summary><br>
   
-  </details>
+  <br></details>
 
 ## ¡Sígueme!
 [![](https://img.shields.io/badge/@progra_mapa-white?style=for-the-badge&labelColor=blue&logo=Twitter&logoColor=white)](https://twitter.com/progra_mapa)[![](https://img.shields.io/badge/PrograMapa-grey?style=for-the-badge&logo=wordpress)](https://programapa.wordpress.com)[![](https://img.shields.io/badge/Roberto-blue?style=for-the-badge&logo=linkedin)](https://linkedin.com/in/robertojl)[![](https://img.shields.io/badge/@progra_mapa-white?style=for-the-badge&logo=instagram)](https://instagram.com/progra_mapa)
+
