@@ -1224,6 +1224,44 @@ SELECT topology.DropTopology('nombre_capa');
 <details>
   <summary><strong>Crear topología de red</strong></summary><br>
   
+  <h2><strong>Topología de red</strong></h2>
+<p>A la hora de hacer análisis espaciales es conveniente que nuestros geodatos cuenten con topología. En el <a href="https://programapa.wordpress.com/2020/12/15/anadir-topologia-a-las-capas/">post de topología en PostGIS</a> explico brevemente qué es la topología y qué bondades ofrece, pero en resumidas cuentas la topología almacena las <a rel="noreferrer noopener" href="https://programapa.wordpress.com/2020/11/13/relaciones-espaciales/" target="_blank">relaciones espaciales</a> existentes en nuestros datos.</p>
+<p>La topología aplicada a capas de carreteras, ríos o cualquier entidad lineal del territorio lo que hace es estructurar los datos para que cada arco comience siempre en un nodo y acabe en otro, identificando en sus atributos el nodo en el que empieza y en el que acaba. Dicho de otro modo, cada cruce es un punto y cada calle es un arco que debe conectar sí o sí con dos puntos (aunque sea una calle sin salida).</p>
+<p>Gracias a esta información podremos hacer análisis de redes tales como:</p>
+<ul><li>Averiguar la ruta más corta entre dos nodos de la red</li><li>La ruta más corta para atravesar varios puntos y regresar al origen</li><li>Calcular los costes de desplazamiento entre varias rutas</li></ul>
+<p>Además, podríamos añadir a la coctelera variables como la velocidad o el sentido de la circulación para cada tramo, los giros prohibidos de cada nodo, el estado del tráfico, restricciones&#8230;</p>
+<p>Básicamente, lo que se hace es calcular la longitud total del recorrido sumando las longitudes de los arcos por los que ha sido posible circular. A ese valor se le aplicarán los distintos factores que condicionen el viaje como por ejemplo:</p>
+<ul><li>El consumo de carburante en litros/km</li><li>Emisiones contaminantes en kg CO2/km</li><li>Tiempo de recorrido en función de la velocidad de la vía</li><li>Mayor o menor factor de consumo en función de la carga y la pendiente</li></ul>
+<p>El valor final puede ser comparado entre distintas alternativas para encontrar la ruta óptima en función del tiempo y los costes económicos y/o ecológicos que estemos dispuestos a asumir.</p>
+<h2><strong>Añadir topología a una red en PostGIS</strong></h2>
+<h3><strong>Activar las extensiones PostGIS y pgRouting</strong></h3>
+<p>Lo primero que necesitamos es que la base de datos tenga activadas las extensiones PostGIS y pgRouting:</p>
+<pre>
+create extension postgis;
+create extension pgrouting;
+</pre>
+<p>pgRouting es una extensión de PostGIS dedicada al análisis de redes con la que podremos añadir topología a <a rel="noreferrer noopener" href="https://programapa.wordpress.com/2020/11/06/tipos-de-datos-espaciales/" target="_blank">capas multilínea o multilinestring</a> como puede ser la red de carreteras, de metro o la red fluvial y empezar a usarlas para nuestros análisis de redes.</p>
+<h3><strong>Importar y preparar los datos</strong></h3>
+<p>Si obtenemos la capa de líneas desde OpenStreetMap y la importamos en pgRouting como cuento <a href="https://programapa.wordpress.com/2021/01/15/importar-la-red-viaria-de-osm-a-postgis-con-pgrouting-windows/">en esta otra entrada</a> la topología se generará automáticamente, pero lo habitual es que tengamos que construirla.</p>
+<p>Para importar un .shp se puede usar el PostGIS Shapefile Import/Export manager, que viene por defecto con PostGIS y permite añadir a la base de datos que seleccionemos (que tenga activadas las extensiones del punto anterior) los shapefiles que se encuentren en nuestro PC. </p>
+<p>Para crear la topología de redes es necesario asegurarnos de que <strong>la capa de líneas cuenta con las siguientes columnas</strong>:</p>
+<ol><li>Una columna ID que identifique cada de forma individual</li><li>Una columna con la geometría de cada arco</li><li>Otra columna de tipo double que vaya a almacenar los costes de desplazamiento para cada arco</li><li>Una columna que vaya a almacenar el ID del nodo en el que empieza el arco (source) y otra columna que almacene el ID del nodo en el que termine (target)</li></ol>
+<p>El siguiente código viene a añadir las columnas de costes y de nodos source y target, que son las que no suelen estar presentes en los shapefiles:</p>
+<pre>
+ALTER TABLE nombre_capa ADD COLUMN coste double precision;
+ALTER TABLE nombre_capa ADD COLUMN source int;
+ALTER TABLE nombre_capa ADD COLUMN target int;
+</pre>
+<h3><strong>Crear la topología de red</strong></h3>
+<p>Una vez cumplamos estos requisitos, ejecutaremos el siguiente código para crear la topología de redes:</p>
+<pre>
+SELECT pgr_createTopology('nombre_capa', 0.001, 'geom', 'gid', 'source', 'target');
+</pre>
+<p>pgr_createTopology necesita las siguientes variables:</p>
+<ul><li>El nombre de la capa/tabla a la que añadiremos la topología.</li><li>La tolerancia o umbral, habitualmente en metros, a partir del cual se asigna la misma posición en el espacio a los vértices que se encuentren dentro de él. Debe ser pequeña para que así reasigne solo aquellos vértices que realmente pudieran verse repetidos, por eso en el ejemplo se ha puesto 0.001.</li><li>Las columnas de geometría, de ID y source y target</li></ul>
+<p>Una vez hecho esto, se creará una nueva tabla con el nombre de la capa de líneas a la que le hemos añadido la topología + el sufijo »_vértices_pgr» que almacenará los nodos de la red, y las columnas source y target se actualizarán almacenando para cada vértice los ID de los nodos a los que está conectado.</p>
+<p>La capa ya estará lista para llevar acabo análisis de redes.</p>
+  
   <br></details>
   
   <details>
