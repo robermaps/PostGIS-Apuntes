@@ -1026,15 +1026,198 @@ WHERE altitud &gt; (SELECT AVG(altitud) FROM municipios);
 <details>
   <summary><strong>Datos geométricos</strong></summary><br>
   
+  <p>En cartografía, los elementos geográficos se abstraen, según su naturaleza, en objetos geométricos como puntos, líneas o polígonos que son posicionados en un marco de referencia espacial a través de las coordenadas de sus vértices. </p>
+<p>Es el caso de las <strong>variables geográficas discretas</strong>, es decir, elementos que pueden individualizarse: un árbol será un punto que marque sus coordenadas, una parcela será un polígono cuyos lados recorran sus lindes, una calle recta corresponderá a una línea que una dos puntos correspondientes al inicio y fin de dicha calle etc.</p>
+<p>Esta clase de información geográfica en forma de objetos geométricos se denomina <strong>vectorial</strong>. Existe otra denominada ráster que suele utilizarse para variables continuas del territorio como elevación o temperaturas.</p>
+<p>En una base de datos geográficos que siga el <strong>modelo Simple Feature</strong> cada uno de los objetos vectoriales corresponderá con un registro en una tabla que contendrá información como su nombre, sus medidas, su fecha o cualquier otro valor que queramos. </p>
+<p>Las geometrías en <strong>PostGIS </strong>se engloban dentro del <a href="https://programapa.wordpress.com/2020/10/01/tipos-de-datos-en-sql/">tipo de dato</a> <strong>geometry</strong> en el que se especifica qué tipo de geometría se va a almacenar:</p>
+<pre><code>geometry(tipo, SRC)</code></pre>
+<ul><li><strong>Tipo</strong> hace referencia al tipo de geometría que almacenará una columna que guarde geometrías y que serán detallados más abajo</li><li><strong>SRC </strong>es el código del<strong> <a rel="noreferrer noopener" href="https://spatialreference.org/" target="_blank">sistema de referencia</a></strong> en el que se encuentren las coordenadas de los objetos que se introduzcan</li></ul>
+<h3><strong>Tipos de geometría</strong></h3>
+<p>A continuación se detallan los tipos de geometría con los que trabaja PostGIS:</p>
+<h4><strong>POINT</strong></h4>
+<figure><img src="https://programapa.files.wordpress.com/2020/11/point.png?w=150"/></figure>
+<p>Un único punto en el espacio localizado a través de sus coordenadas X e Y. Se utiliza para posicionar elementos individualizados en un único registro como una persona, un comercio o un coche.</p>
+<p>Con los puntos se pueden hacer por ejemplo interpolaciones, selecciones espaciales o análisis de proximidad.</p>
+<p>Cuando sean <a href="https://programapa.wordpress.com/2020/10/05/lista-de-instrucciones-basicas-en-postgresql-dml/">insertados </a>en un registro deberá usarse la siguiente codificación WKT (<em>Well Known Text</em>) con las coordenadas del punto:</p>
+<pre><code>POINT (10 15)</code></pre>
+<h4><strong>MULTIPOINT</strong></h4>
+<figure><img src="https://programapa.files.wordpress.com/2020/11/multipoint.png?w=150"/></figure>
+<p>Se puede también almacenar en un solo registro varios puntos que cuenten con las mismas características salvo su posición en el espacio, como puede ser el caso de buzones, señales de tráfico STOP o lugares donde se han encontrado trufas.</p>
+<p>Con ellos pueden hacerse al igual que con los POINT análisis de proximidad o selecciones espaciales.</p>
+<p>Cuando sean <a href="https://programapa.wordpress.com/2020/10/05/lista-de-instrucciones-basicas-en-postgresql-dml/">insertados </a>en un registro deberá usarse la siguiente codificación WKT con las coordenadas de cada punto separados por comas:</p>
+<pre><code>MULTIPOINT (10 15, 15 25, 7 35, 30 28)</code></pre>
+<h4><strong>LINESTRING</strong></h4>
+<figure><img loading="lazy" src="https://programapa.files.wordpress.com/2020/11/linestring.png?w=150" width="150" height="150" /></figure>
+<p>Cada registro almacena una sola línea. Las líneas consisten en una secuencia de puntos unidos según el orden en el que han sido introducidos. Se usan para elementos lineales del territorio como caminos, ríos, fronteras o rutas de todo tipo.</p>
+<p>Este tipo de geometría permite medir longitudes y hacer análisis de redes entre otros geoprocesos.</p>
+<p>Cuando sean <a href="https://programapa.wordpress.com/2020/10/05/lista-de-instrucciones-basicas-en-postgresql-dml/">insertados </a>en un registro deberá usarse la siguiente codificación WKT con las coordenadas de los vértices en el orden en el que se dibujará la línea:</p>
+<pre><code>LINESTRING (10 30, 20 15, 40 10)</code></pre>
+<h4><strong>MULTILINESTRING</strong></h4>
+<figure><img src="https://programapa.files.wordpress.com/2020/11/multilinestring.png?w=150"/></figure>
+<p>Un único registro también puede almacenar varias líneas que cuenten con las mismas características, como pueden ser curvas de nivel con el mismo valor de altitud o distintos tramos de una misma carretera.</p>
+<p>Cuando sean <a href="https://programapa.wordpress.com/2020/10/05/lista-de-instrucciones-basicas-en-postgresql-dml/">insertados </a>en un registro deberá usarse la siguiente codificación WKT con las coordenadas de los vértices de cada línea agrupados entre paréntesis:</p>
+<pre><code>MULTILINESTRING ((10 40, 20 15, 40 10) , (5 7, 12 5) , (45 30, 30 25, 27 39, 41 50 ))</code></pre>
+<h4><strong>POLYGON</strong></h4>
+<div class="wp-block-jetpack-layout-grid alignfull column1-desktop-grid__span-2 column1-desktop-grid__start-5 column1-desktop-grid__row-1 column2-desktop-grid__span-2 column2-desktop-grid__start-7 column2-desktop-grid__row-1 column1-tablet-grid__span-4 column1-tablet-grid__row-1 column2-tablet-grid__span-4 column2-tablet-grid__start-5 column2-tablet-grid__row-1 column1-mobile-grid__span-4 column1-mobile-grid__row-1 column2-mobile-grid__span-4 column2-mobile-grid__row-2 wp-block-jetpack-layout-gutter__nowrap wp-block-jetpack-layout-gutter__none">
+<div class="wp-block-jetpack-layout-grid-column wp-block-jetpack-layout-grid__padding-none">
+<figure><img src="https://programapa.files.wordpress.com/2020/11/polygon.png?w=150"/></figure>
+<div class="wp-block-jetpack-layout-grid-column wp-block-jetpack-layout-grid__padding-none">
+<figure><img src="https://programapa.files.wordpress.com/2020/11/polygon2.png?w=150"/></figure>
+<p>Los polígonos son líneas cerradas en las que el primer y el último vértice coinciden en el espacio. Sirven para representar superficies como parcelas, embalses o usos del suelo.</p>
+<p>Permiten hacer cálculos de superficie, selecciones espaciales y recortar capas entre otros geoprocesos.</p>
+<p>Cuando sean <a href="https://programapa.wordpress.com/2020/10/05/lista-de-instrucciones-basicas-en-postgresql-dml/">insertados </a>en un registro deberá usarse la siguiente codificación WKT con las coordenadas de los vértices de cada polígono, teniendo en cuenta que el primero y el último deben ser el mismo:</p>
+<pre><code>POLYGON(5 20, 20 10, 35 22, 15 35, 5 20)</code></pre>
+<p>Si se quiere dejar huecos dentro de un polígono como el de la segunda imagen, habrá que añadir un segundo polígono que delimite la línea del agujero:</p>
+<pre><code>POLYGON((5 20, 20 10, 35 22, 15 35, 5 20) , (16 19, 20 30, 25 29))</code></pre>
+<h4><strong>MULTIPOLYGON</strong></h4>
+<figure><img src="https://programapa.files.wordpress.com/2020/11/multipolygon.png?w=150"/></figure>
+<p>En este caso un mismo registro amacena varias geometrías poligonales con los mismos atributos. Es útil por ejemplo para usos del suelo, en donde una única clase como la urbana es común para todas las áreas que se clasifiquen como tales (dependería siempre de con cuántas clases quieras trabajar)</p>
+<pre><code>POLYGON((5 20, 20 10, 35 22, 15 35, 5 20) , (36 32, 70 19, 50 45), (6 45, 5 50, 55 50, 60 45))</code></pre>
+<h3><strong>Dimensiones de las geometrías</strong></h3>
+<p>Dado que las geometrías son objetos espaciales, contarán con una u otra dimensión según sus características medibles:</p>
+<figure><table><thead><tr><th data-align="center">Geometría</th><th data-align="center">Dimensión</th></tr></thead><tbody><tr><td data-align="center">La nada</td><td data-align="center">-1</td><td data-align="left">No hay coordenadas, no hay nada que medir</td></tr><tr><td data-align="center">Puntos</td><td data-align="center">0</td><td data-align="left">Una posición concreta en el espacio</td></tr><tr><td data-align="center">Líneas</td><td data-align="center">1</td><td data-align="left">La unión de varias posiciones que da lugar a las líneas, permitiendo medir longitudes</td></tr><tr><td data-align="center">Polígonos</td><td data-align="center">2</td><td data-align="left">Una línea cerrada da lugar a una superficie con valores medibles de ancho y largo (y a partir de ellas otras derivadas como la superficie)</td></tr></tbody></table></figure>
+<p>De momento solo trataremos estas dimensiones pero existen más:</p>
+<ul><li>Tercera dimensión: una coordenada Z con valores de altura nos permitirá medir también volúmenes.</li><li>Cuarta dimensión: coordenadas temporales T que nos permiten medir velocidades, entre otras cosas.</li></ul>
+  
   <br></details>
   
 <details>
   <summary><strong>Predicados espaciales</strong></summary><br>
   
+  <p>Los predicados espaciales son «<em>operaciones de tipo lógico que nos indican si entre dos objetos geográficos existe o no un tipo de relación dada</em>» (<a href="https://volaya.github.io/libro-sig/chapters/Analisis_espacial.html" target="_blank" rel="noreferrer noopener">Análisis espacial &#8211; Relaciones topológicas; Libro SIG de Víctor Olaya</a>) </p>
+<p>Es decir, es la forma que tenemos para decirle al programa informático que compruebe si dos o más objetos geográficos (entidades) se tocan, se cruzan, a qué distancia están, qué espacio no comparten ninguno de los dos&#8230;</p>
+<p>Estos predicados espaciales (también llamados geográficos o topológicos según el autor) varían su sintaxis según la herramienta que estemos usando. En este post resumo la sintaxis de estos predicados en PostGIS.</p>
+<p>Con ellos obtendremos valores TRUE (booleanos) cuando se cumpla la relación espacial consultada entre las geometrías de los objetos incluidas en el predicado.</p>
+<p>Los siguientes predicados espaciales y muchos otros más podéis <a href="https://postgis.net/docs/reference.html#Spatial_Relationships" target="_blank" rel="noreferrer noopener">encontrarlos en la documentación oficial de PostGIS</a></p>
+<h2>INTERSECT</h2>
+<p>Las geometrías tienen algún punto en común</p>
+<pre>
+ST_Intersects(geometry A, geometry B)
+</pre>
+<figure><img src="https://programapa.files.wordpress.com/2020/11/st_intersects.png?w=375" srcset="https://programapa.files.wordpress.com/2020/11/st_intersects.png 375w, https://programapa.files.wordpress.com/2020/11/st_intersects.png?w=119 119w, https://programapa.files.wordpress.com/2020/11/st_intersects.png?w=239 239w" sizes="(max-width: 375px) 100vw, 375px" /></figure>
+<h2>EQUALS</h2>
+<p>Las geometrías son idénticas</p>
+<pre>
+ST_Equal(geometry A, geometry B)
+</pre>
+<figure><img src="https://programapa.files.wordpress.com/2020/11/st_equals.png?w=352" srcset="https://programapa.files.wordpress.com/2020/11/st_equals.png 352w, https://programapa.files.wordpress.com/2020/11/st_equals.png?w=150 150w, https://programapa.files.wordpress.com/2020/11/st_equals.png?w=300 300w" sizes="(max-width: 352px) 100vw, 352px" /></figure>
+<h2>DISJOINT</h2>
+<p>Las geometrías no coinciden en ningún momento</p>
+<pre>
+ST_Disjoint(geometry A , geometry B)
+</pre>
+<figure><img src="https://programapa.files.wordpress.com/2020/11/st_disjoint.png?w=329" srcset="https://programapa.files.wordpress.com/2020/11/st_disjoint.png 329w, https://programapa.files.wordpress.com/2020/11/st_disjoint.png?w=108 108w, https://programapa.files.wordpress.com/2020/11/st_disjoint.png?w=216 216w" sizes="(max-width: 329px) 100vw, 329px" /></figure>
+<h2>CROSSES</h2>
+<p>Dos geometrías coinciden en un único punto</p>
+<pre>
+ST_Crosses(geometry A, geometry B)
+</pre>
+<figure><img src="https://programapa.files.wordpress.com/2020/11/st_crosses.png?w=336" srcset="https://programapa.files.wordpress.com/2020/11/st_crosses.png 336w, https://programapa.files.wordpress.com/2020/11/st_crosses.png?w=150 150w, https://programapa.files.wordpress.com/2020/11/st_crosses.png?w=300 300w" sizes="(max-width: 336px) 100vw, 336px" /></figure>
+<h2> OVERLAPS </h2>
+<p>Existe un solapamiento entre dos objetos, generando una nueva geometría</p>
+<pre>
+ST_Overlaps(geometry A, geometry B)
+</pre>
+<figure><img src="https://programapa.files.wordpress.com/2020/11/st_overlaps-1.png?w=275" srcset="https://programapa.files.wordpress.com/2020/11/st_overlaps-1.png 275w, https://programapa.files.wordpress.com/2020/11/st_overlaps-1.png?w=150 150w" sizes="(max-width: 275px) 100vw, 275px" /></figure>
+<h2>TOUCHES</h2>
+<p>Las geometrías se tocan sin coincidir sus interiores en ningún momento</p>
+<pre>
+ST_Touches(geometry A, geometry B)
+</pre>
+<figure><img src="https://programapa.files.wordpress.com/2020/11/st_touches.png?w=323" srcset="https://programapa.files.wordpress.com/2020/11/st_touches.png 323w, https://programapa.files.wordpress.com/2020/11/st_touches.png?w=135 135w, https://programapa.files.wordpress.com/2020/11/st_touches.png?w=271 271w" sizes="(max-width: 323px) 100vw, 323px" /></figure>
+<h2>WITHIN/CONTAINS</h2>
+<p>Comprueba si una geometría está dentro de otra (within) o si una geometría contiene a otra (contains)</p>
+<p>A está dentro de B:</p>
+<pre>
+ST_Within(geometry A , geometry B)
+</pre>
+<p>A contiene B:</p>
+<pre>
+ST_Contains(geometry A, geometry B)
+</pre>
+<figure><img src="https://programapa.files.wordpress.com/2020/11/st_within.png?w=329" srcset="https://programapa.files.wordpress.com/2020/11/st_within.png 329w, https://programapa.files.wordpress.com/2020/11/st_within.png?w=108 108w, https://programapa.files.wordpress.com/2020/11/st_within.png?w=216 216w" sizes="(max-width: 329px) 100vw, 329px" /></figure>
+<h2>DISTANCE WITHIN</h2>
+<p>Si una geometría se encuentra a cierta distancia de otra</p>
+<pre>
+ST_DWithin(geometry A, geometry B, distance)
+</pre>
+<figure><img src="https://programapa.files.wordpress.com/2020/11/st_dwithin.png?w=330" srcset="https://programapa.files.wordpress.com/2020/11/st_dwithin.png 330w, https://programapa.files.wordpress.com/2020/11/st_dwithin.png?w=150 150w, https://programapa.files.wordpress.com/2020/11/st_dwithin.png?w=300 300w" sizes="(max-width: 330px) 100vw, 330px" /></figure>
+<h2> DISTANCE </h2>
+<p>En este caso, en vez de devolver TRUE o FALSE devuelve un valor decimal con la distancia entre las geometrías seleccionadas en las unidades del sistema de referencia de la capa:</p>
+<pre>
+  
   <br></details>
   
 <details>
   <summary><strong>Crear topología</strong></summary><br>
+  
+  <p>La topología, referida al ámbito geográfico, son las relaciones espaciales que existen entre distintos objetos o fenómenos territoriales. </p>
+<p>Cuando hacemos análisis espaciales como <a href="https://programapa.wordpress.com/2020/11/13/relaciones-espaciales/">comentamos en este artículo</a> se comprueba la existencia de estas relaciones, dónde se producen y en qué magnitud. Sin embargo, eso no quiere decir que los datos espaciales contengan topología, sino que dicha topología se calcula o extrae a posteriori a partir de objetos posicionados en un marco espacial.</p>
+<p>Por ejemplo, si tenemos dos polígonos correspondientes a dos parcelas que se encuentran pegadas la una a la otra, un análisis espacial nos devolvería el dato que dice que se encuentran compartiendo frontera.</p>
+<p>Cuando los objetos almacenan topología, lo que hacen es guardar esas relaciones existentes entre ellos, es decir, las relaciones son implícitas a ellos. De este modo, cuando los datos se editen, los objetos seguirán manteniendo esas relaciones.</p>
+<p>Si ahora modificáramos el límite de una de esas parcelas, ampliando su tamaño sobre la otra, no se produciría un solape, sino que la otra parcela vería reducida su tamaño y seguirían compartiendo borde.</p>
+<p>Añadir topología es muy útil porque reduce la geometría a sus primitivas, haciendo que ocupen menos espacio y permitiendo hacer análisis espaciales más rápidos y precisos. Sin embargo, resulta contraproducente usarla en muchas situaciones. Recomiendo leer el <a rel="noreferrer noopener" href="http://volaya.github.io/libro-sig/chapters/Tipos_datos.html#Topolog%C3%ADa" target="_blank">apartado de topología</a> del capítulo sobre modelos de información geográfica del libro SIG de Víctor Olaya para ampliar más sobre este tema.</p>
+<h2><strong>Añadir topología con PostGIS</strong></h2>
+<p>PostGIS permite que añadamos topología a nuestras capas espaciales en unos pocos pasos:</p>
+<h3><strong>1 &#8211; Activar la extensión PostGIS y la extensión PostGIS_topology </strong></h3>
+<p>Antes de comenzar es necesario que la base de datos PostgreSQL cuente con las funciones espaciales (proporcionadas por la extensión PostGIS) y con las funciones topológicas (dadas en PostGIS_topology).</p>
+<p>Bastará con ejecutar las siguientes sentencias:</p>
+<pre>
+CREATE EXTENSION postgis;
+CREATE EXTENSION postgis_topology; 
+</pre>
+<h3><strong>2 &#8211; Crear esquema topológico</strong></h3>
+<p>Lo primero es crear con el siguiente código un <a href="https://programapa.wordpress.com/2020/09/22/lista-de-instrucciones-basicas-de-sql/">esquema</a> en PostgreSQL en el que que se almacenará la topología:</p>
+<pre>
+SELECT topology.CreateTopology('nombre_topología', SRC, tolerancia);
+</pre>
+<p>Se le asigna un nombre a la topología, generalmente el nombre de la capa a la que se la añadiremos junto a un prefijo o un sufijo &#8216;topo&#8217; (topo_carreteras por ejemplo)</p>
+<p>El <a rel="noreferrer noopener" href="https://spatialreference.org/" target="_blank">sistema de referencia</a> de la topología (25830 por ejemplo)</p>
+<p>La tolerancia clúster (por ejemplo 0.1) asigna la misma posición a los vértices que se encuentren dentro de esa tolerancia, desplazándolos un poco durante el proceso. Por tanto, dicha tolerancia debe ser pequeña para que así reasigne solo aquellos vértices que realmente pudieran verse repetidos.</p>
+<p>El <strong>resultado </strong>es un nuevo esquema que contará con las siguientes tablas, cada una almacenando una parte de la topología: los nodos, los bordes, las caras y las relaciones existentes entre ellos.</p>
+<figure><img src="https://programapa.files.wordpress.com/2020/12/image-15.png?w=150"/></figure>
+<h3><strong>3 &#8211; Añadir columna topogeométrica a la capa</strong></h3>
+<p>Tendremos que usar la siguiente sentencia:</p>
+<pre>
+SELECT topology.AddTopoGeometryColumn('nombre_topo', 'esquema_capa', 'nombre_capa', 'nombre_topogeom', 'tipo_geometría');
+</pre>
+<p><em>Nombre_topo </em>indica el esquema topológico creado en el punto 1 en el que se guardará la topología </p>
+<p><em>Esquema_capa</em> se refiere al esquema en el que se encuentra la capa a la que vamos a dar topología</p>
+<p><em>Nombre_capa </em>es el nombre de la tabla (o capa, es lo mismo) espacial </p>
+<p><em>Nombre_topogeom</em> es el nombre de la columna que contendrá la topogeometría. Habitualmente se la llama <em>topogeom</em></p>
+<p><em>Tipo_geometría </em>es el <a href="https://programapa.wordpress.com/2020/11/06/tipos-de-datos-espaciales/">tipo de geometría</a> de la capa </p>
+<p>Cuando se añade una capa al esquema topológico por un lado se añade una nueva columna llamada <em>topogeom </em>a la tabla de la capa que va a albergar topología.</p>
+<figure><img src="https://programapa.files.wordpress.com/2020/12/image-16.png?w=130"/></figure>
+<p>Pero también por otro&nbsp;lado se&nbsp;añade automáticamente&nbsp;un registro en la&nbsp;tabla&nbsp;de&nbsp;metadatos&nbsp;<em>layer</em> del esquema <em>topology</em> con la capa que incorpora la topología. Este es un esquema que se crea automáticamente cuando activamos la extensión de topología en una base de datos de PostgreSQL.</p>
+<h3><strong>4 &#8211; Rellenar&nbsp;la&nbsp;nueva&nbsp;columna&nbsp;<em>topogeom</em></strong></h3>
+<p>Se actualiza la capa rellenando la columna <em>topogeom </em>con los datos de la columna de geometría transformados a topología:</p>
+<pre>
+UPDATE nombre_capa 
+SET topogeom = topology.toTopoGeom(
+     columna_geom, 'esquema_topo', 
+     layer_id, tolerancia
+);
+</pre>
+<p><em>Columna_geom </em>es la columna con geometría de la tabla</p>
+<p><em>Esquema_topo</em> es el esquema topológico que creamos al inicio</p>
+<p><em>Layer_id</em> es el identificador de la capa de topología asignado en la tabla <em>layer </em>del esquema <em>topology</em></p>
+<p><em>Tolerancia</em> es el umbral para reasignar vértices explicado en el punto 1</p>
+<figure><img src="https://programapa.files.wordpress.com/2020/12/image-20.png?w=103"/></figure>
+<p>Pueden generarse errores durante el proceso al emplear tolerancias muy grandes o al existir geometrías no válidas. En tal caso hay que revisar las geometrías para que sean válidas y reducir la tolerancia, es decir, exigir más precisión a la hora de crear la topología.</p>
+<h3><strong>5 &#8211; Ya en QGIS</strong></h3>
+<p>Una vez hecho todo esto, desde QGIS veríamos un esquema en el que se encuentran cuatro capas: la de los nodos, la de los bordes, la de las caras y la de las relaciones. Las podremos añadir al proyecto y operar con ellas aprovechando sus ventajas, pero teniendo también en cuenta sus inconvenientes, ya que por ejemplo no son adecuadas para fines estéticos o de diseño.</p>
+<figure><img src="https://programapa.files.wordpress.com/2020/12/image-18.png?w=172" srcset="https://programapa.files.wordpress.com/2020/12/image-18.png 172w, https://programapa.files.wordpress.com/2020/12/image-18.png?w=111 111w" sizes="(max-width: 172px) 100vw, 172px" /></figure>
+<figure><img src="https://programapa.files.wordpress.com/2020/12/image-19.png?w=897" srcset="https://programapa.files.wordpress.com/2020/12/image-19.png 897w, https://programapa.files.wordpress.com/2020/12/image-19.png?w=150 150w, https://programapa.files.wordpress.com/2020/12/image-19.png?w=300 300w, https://programapa.files.wordpress.com/2020/12/image-19.png?w=768 768w" sizes="(max-width: 897px) 100vw, 897px" /></figure>
+<p>Por ejemplo, si simplificáramos las geometrías de las Comunidades Autónomas de España con <em>ST_Simplify</em> sobre la columna <em>geom </em>(la de geometrías simples)<em> </em>se originarían gaps entre las distintas regiones. </p>
+<figure><img src="https://programapa.files.wordpress.com/2020/12/image-33.png?w=649" srcset="https://programapa.files.wordpress.com/2020/12/image-33.png 649w, https://programapa.files.wordpress.com/2020/12/image-33.png?w=150 150w, https://programapa.files.wordpress.com/2020/12/image-33.png?w=300 300w" sizes="(max-width: 649px) 100vw, 649px" /></figure>
+<p>En cambio, si lo aplicáramos sobre la columna <em>topogeom</em> (la columna que hemos añadido con la topología) esto no se produciría puesto que mantendría la consistencia de los datos, es decir, mantendría los polígonos unidos:</p>
+<figure><img src="https://programapa.files.wordpress.com/2020/12/image-34.png?w=699" srcset="https://programapa.files.wordpress.com/2020/12/image-34.png 699w, https://programapa.files.wordpress.com/2020/12/image-34.png?w=150 150w, https://programapa.files.wordpress.com/2020/12/image-34.png?w=300 300w" sizes="(max-width: 699px) 100vw, 699px" /></figure>
+<h3><strong>6 &#8211; Borrar la topología de una capa</strong></h3>
+<p>Si quisiéramos borrar la topología habría que usar el siguiente código:</p>
+<pre>
+SELECT topology.DropTopology('nombre_capa');
+</pre>
   
   <br></details>
   
@@ -1044,8 +1227,67 @@ WHERE altitud &gt; (SELECT AVG(altitud) FROM municipios);
   <br></details>
   
   <details>
-  <summary><strong>Importar red viaria OSM</strong></summary><br>
+  <summary><strong>Importar red viaria de OSM con pgRouting</strong></summary><br>
   
+   <h2><strong>¿Qué es pgRouting?</strong></h2>
+<p>Pgrouting es un complemento que amplía las posibilidades de calcular proximidades con PostGIS añadiendo funcionalidades de red. En vez de calcular distancias en línea recta entre objetos geométricos (como puedan ser dos puntos) se calcularán rutas en base a una red de nodos y vértices.</p>
+<p>Además se puede añadir a la coctelera variables como el coste máximo por unidad de espacio, tiempos de recorrido, emisiones contaminantes, estado del tráfico y demás condicionantes para hallar la ruta óptima, similar a lo que hace Google con Maps. </p>
+<p>Incluso pueden crearse rutas para visitar varios puntos y volver al origen (conocido como el <a rel="noreferrer noopener" href="https://es.wikipedia.org/wiki/Problema_del_viajante" target="_blank">Problema del Viajante</a>) optimizando los recursos disponibles.</p>
+<p>Pero para hacer estos análisis necesitamos como base una red de vértices interconectados con nodos: capas vectoriales que almacenen callejeros de núcleos urbanos o redes de carreteras. OpenStreetMap (OSM) permite descargarnos geodatos de todos aquellos sitios cartografiados en su plataforma de forma totalmente gratuita, y además a la carta: podemos elegir el área concreta de la que descargaremos los datos.</p>
+<p>En esta entrada veremos cómo descargar pgRouting e importar la red viaria de OSM a PostGIS y dejarla lista para hacer análisis de redes.</p>
+<h2><strong>Descargar pgRouting</strong></h2>
+<p>Si ya estáis usando PostGIS, pgRouting suele venir dentro del paquete de herramientas espaciales que incluye, por lo que no tendríais que hacer nada.</p>
+<p>Si no es el caso, hay que usar la aplicación Stack Builder que trae PostgreSQL para descargar alguno de los paquetes de herramientas espaciales que se encuentran en la categoría de Spatial Extensions en los que se incluya tanto PostGIS como pgRouting.</p>
+<h2><strong>Importar datos de OpenStreetMap</strong></h2>
+<h3><strong>1- Obtener los datos</strong></h3>
+<p>Como hemos dicho, OpenStreetMap es una plataforma flexible que permite descargarnos sus conjuntos de datos para zonas específicas que elijamos. En el post <a href="https://programapa.wordpress.com/2020/09/26/fuentes-de-geodatos/"><strong>Fuentes de geodatos</strong></a> hay una sección dedicada a esta plataforma con enlaces a distintos servicios de descarga en función del conjunto de datos que necesitemos.</p>
+<p>Servicios como Geofabrik permiten la descarga de archivos .shp en algunos conjuntos de datos, pero la mayoría, si no son todos, descargan los archivos de OpenStreetMap en formato .osm, propio de esta plataforma. Por ello este post va dirigido a la importación de archivos .osm.</p>
+<p>Para seleccionar datos de OSM usando coordenadas tendremos que acceder a la API desde el navegador y hacer una llamada añadiendo al final del enlace de la barra de direcciones el comando map?bbox= seguido de las coordenadas de una <em>bouncing box</em> que delimite el área del que queremos datos:</p>
+<p>La bouncing box puede obtenerse en la página <a href="http://bboxfinder.com/#" target="_blank" rel="noreferrer noopener">bbox finder</a>
+<p>Por ejemplo, la descarga de datos OSM para San Javier (Bolivia) podría ser el siguiente enlace:</p>
+<p><a href="http://overpass-api.de/api/xapi?map?bbox=-62.522936,-16.285458,-62.488689,-16.266425" rel="nofollow">http://overpass-api.de/api/xapi?map?bbox=-62.522936,-16.285458,-62.488689,-16.266425</a></p>
+<p>El último paso de este punto sería <strong>renombrar el archivo descargado</strong> para que su extensión sea .osm. Este archivo contendrá la cartografía OSM disponible para las cordenadas indicadas, pero <strong>pgRouting importará solo la red de carreteras.</strong></p>
+<h3><strong>2- Crear base de datos con PostGIS y pgRouting </strong></h3>
+<p>Para importar estos datos a PostgreSQL tendremos que crear una base de datos espaciales activando las extensiones PostGIS y pgRouting. Puede hacerse tanto a través de la interfaz de pgAdmin o del siguiente código:</p>
+<pre>
+CREATE DATABASE nombre
+    WITH 
+    OWNER = usuario
+    ENCODING = 'UTF8'
+    CONNECTION LIMIT = -1;
+CREATE EXTENSION postgis;
+CREATE EXTENSION pgrouting;
+</pre>
+<p>También puede simplemente activarse estas extensiones en una base de datos ya existente.</p>
+<h3><strong>3- Importar los datos a la base de datos</strong></h3>
+<p>La importación deberá hacerse con la Consola de Windows o Símbolo de Sistema. </p>
+<p>Lo primero una vez abierto es cambiar la ruta de trabajo a la ruta en la que se encuentra el archivo osm2pgrouting.exe. La ruta puede variar en función de dónde tengáis instalado PostgreSQL:</p>
+<pre>
+cd C:\Program Files\PostgreSQL\12\bin\
+</pre>
+<p>Después se debe señalar en primer lugar el nombre del archivo .exe a abrir (osm2pgRouting) junto a los siguientes parámetros:</p>
+<pre>
+osm2pgRouting --file C:\Users\usuario\Downloads\archivo.osm --dbname nombre_database --username usuario --password constraseña --conf mapconfig.xml --clean
+</pre>
+<p>&#8211;osm2pgRouting = el archivo .exe que ejecuta osm2pgrouting</p>
+<p>&#8211;file = el archivo .osm a importar</p>
+<p>&#8211;dbname = el nombre de la base de datos con PostGIS y pgRouting activados a la que se importará el archivo</p>
+<p>&#8211;username = usuario de la base de datos PostgrSQL</p>
+<p>&#8211;password = contraseña de acceso del usuario</p>
+<p>&#8211;conf = la ruta en la que se encuentra el archivo mapconfig.xml. Este archivo indica a osm2pgRouting las tipologías de las vías y carreteras que tiene que importar, por lo que puede modificarse para quedarnos solo las que nos interesen. Si estuviese en la misma carpeta que osm2pgRouting bastaría con poner su nombre.</p>
+<p>&#8211;clean elimina las tablas que ya existiesen en la base de datos con el mismo nombre</p>
+<p>Si todo ha salido bien, tras tiempo (en función de la cantidad de datos) la consola de Windows devolverá al final del todo lo siguiente:</p>
+<figure<img src="https://programapa.files.wordpress.com/2020/12/image-21.png?w=391" srcset="https://programapa.files.wordpress.com/2020/12/image-21.png 391w, https://programapa.files.wordpress.com/2020/12/image-21.png?w=150 150w, https://programapa.files.wordpress.com/2020/12/image-21.png?w=300 300w" sizes="(max-width: 391px) 100vw, 391px" /></figure>
+<h3><strong>4- Resultados</strong></h3>
+<p>Dentro de la base de datos que hemos indicado en los parámetros veremos creadas nuevas tablas con los datos de OpenStreetMap:</p>
+<figure<img src="https://programapa.files.wordpress.com/2020/12/image-22.png?w=186" srcset="https://programapa.files.wordpress.com/2020/12/image-22.png 186w, https://programapa.files.wordpress.com/2020/12/image-22.png?w=150 150w" sizes="(max-width: 186px) 100vw, 186px" /></figure>
+<p>Entre las ventajas de usar datos OSM para nuestros análisis de redes e importarlos con este sistema es que <strong>la topología se genera automáticamente.</strong> Las tablas que usaremos para hacer los análisis de redes serán <em>ways </em>(arcos) y <em>ways_vertices </em>(nodos).</p>
+<p>Si lo visualizáramos en QGIS obtendríamos algo así:</p>
+<figure<img src="https://programapa.files.wordpress.com/2021/01/image-3.png?w=575" srcset="https://programapa.files.wordpress.com/2021/01/image-3.png 575w, https://programapa.files.wordpress.com/2021/01/image-3.png?w=150 150w, https://programapa.files.wordpress.com/2021/01/image-3.png?w=300 300w" sizes="(max-width: 575px) 100vw, 575px" /></figure>
+<p>Cada arco termina en un nodo que conecta con otros arcos. En la tabla de atributos podemos obtener información como su identificador, el nombre de la vía, su longitud, con qué nodos conecta&#8230;</p>
+<p>Cada nodo almacena su identificador y sus coordenadas.</p>
+<p>¡Ya tendríamos listo todo para hacer análisis de redes ya sea en PostGIS o en QGIS!</p> 
+    
   <br></details>
 
 ## ¡Sígueme!
