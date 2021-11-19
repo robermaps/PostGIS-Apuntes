@@ -25,7 +25,7 @@ Por Rober J
 <br></details>
 
   
-## DDL - Lenguaje de definición de datos 👷‍♀️
+## 👷‍♀️ DDL - Lenguaje de definición de datos 
   
 <details>
   <summary><strong>Tablas</strong></summary><br>
@@ -609,7 +609,7 @@ DROP TRIGGER nombre_trigger ON tabla;
 <br></details>
 
   
-## DML - Lenguaje de manipulación de datos 🛠
+## 🛠 DML - Lenguaje de manipulación de datos
   
 <details>
   <summary><strong>SELECT</strong></summary><br>
@@ -1025,7 +1025,7 @@ WHERE altitud &gt; (SELECT AVG(altitud) FROM municipios);
   
 <br></details>
   
-## PostGIS 🐘🌏
+## 🐘🌏 PostGIS 
 
 <details>
   <summary><strong>Datos geométricos</strong></summary><br>
@@ -1332,5 +1332,5 @@ osm2pgRouting --file C:\Users\usuario\Downloads\archivo.osm --dbname nombre_data
     
   <br></details>
 
-## ¡Sígueme! 🌐
+## 🌐 ¡Sígueme!
 [![](https://img.shields.io/badge/@progra_mapa-white?style=for-the-badge&labelColor=blue&logo=Twitter&logoColor=white)](https://twitter.com/progra_mapa)[![](https://img.shields.io/badge/PrograMapa-grey?style=for-the-badge&logo=wordpress)](https://programapa.wordpress.com)[![](https://img.shields.io/badge/Roberto-blue?style=for-the-badge&logo=linkedin)](https://linkedin.com/in/robertojl)[![](https://img.shields.io/badge/@progra_mapa-white?style=for-the-badge&logo=instagram)](https://instagram.com/progra_mapa)
