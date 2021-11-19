@@ -6,7 +6,8 @@ Por Rober J
 
 [![](https://img.shields.io/badge/@progra_mapa-white?style=for-the-badge&labelColor=blue&logo=Twitter&logoColor=white)](https://twitter.com/progra_mapa)[![](https://img.shields.io/badge/PrograMapa-grey?style=for-the-badge&logo=wordpress)](https://programapa.wordpress.com)[![](https://img.shields.io/badge/Roberto-blue?style=for-the-badge&logo=linkedin)](https://linkedin.com/in/robertojl)
 
-<br>
+
+## 👷‍♀️ DDL - Lenguaje de definición de datos 
 
 <details>
   <summary><strong>Introducción a las bases de datos</strong></summary><br>
@@ -25,9 +26,6 @@ Por Rober J
 <p><strong>⚠ Algunas cuestiones básicas como las claves primarias o la integridad de los datos aún no las he tratado en este post</strong>(proximamente)</p>
  
 <br></details>
-
-  
-## 👷‍♀️ DDL - Lenguaje de definición de datos 
   
 <details>
   <summary><strong>Tablas</strong></summary><br>
