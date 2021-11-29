@@ -1,6 +1,6 @@
 # Apuntes de Postgre / PostGIS
 
-<img src="https://i.imgur.com/GiKFsS3.jpg" width="300" height="200" text-align: center></div>
+<img src="https://i.imgur.com/GiKFsS3.jpg" text-align: center></div>
 
 Por Rober J
 
