@@ -1085,6 +1085,38 @@ WHERE altitud &gt; (SELECT AVG(altitud) FROM municipios);
 <ul><li>Tercera dimensión: una coordenada Z con valores de altura nos permitirá medir también volúmenes.</li><li>Cuarta dimensión: coordenadas temporales T que nos permiten medir velocidades, entre otras cosas.</li></ul>
   
   <br></details>
+
+<details>
+  <summary><strong>Las relaciones espaciales: Matriz DE-9IM</strong></summary><br>  
+  
+  <p>Las relaciones espaciales se materializan en forma de <strong>predicados geográficos o espaciales</strong>: se comprueba usando como argumento dos objetos geométricos si estos cumplen alguna relación espacial, devolviendo un resultado booleano (TRUE si se cumple la relación o FALSE si no)</p>
+
+
+
+<p>Los principales predicados geográficos son los equals, disjoint, intersects, touches, crosses, within, contains, overlaps y distances. Podemos sintetizarlos en un modelo topológico denominado <strong>matriz DE-9IM</strong> (<em>Dimensionally Extended 9 intersection Matrix</em>):</p>
+
+
+
+<img src="https://programapa.files.wordpress.com/2020/11/matriz-de-9im-.png?w=716" alt="matriz DE-9IM" /><figcaption><em><a rel="noreferrer noopener" href="https://en.wikipedia.org/wiki/DE-9IM" target="_blank">Fuente: postgis.net</a><a href="https://en.wikipedia.org/wiki/DE-9IM" target="_blank" rel="noreferrer noopener">t</a></em></figcaption>
+
+
+
+<p>Cada relación espacial o predicado tendrá en cuenta unas u otras de las relaciones representadas en la matriz en función de si requieren analizar el interior, el exterior o los bordes de las geometrías así como la <strong><a href="https://programapa.wordpress.com/2020/11/06/tipos-de-datos-espaciales/">dimensión</a> </strong>de las relaciones entre las geometrías:</p>
+
+
+
+<ul><li><strong>T</strong> &#8211; existe intersección en cualquier dimensión</li><li><strong>F</strong> &#8211; no existe intersección (dimensión -1)</li><li><strong>0 </strong>&#8211; la intersección se produce en puntos concretos</li><li><strong>1 </strong>&#8211; la intersección da lugar a una recta</li><li><strong>2 </strong>&#8211; la intersección origina un polígono</li><li><strong>* </strong>&#8211; no importa si hay intersección </li></ul>
+
+
+
+<p>El resultado origina un patrón de la matriz DE-9IM específico para cada una de las relaciones espaciales o predicados como veremos más abajo.</p>
+
+
+
+<div class="wp-block-image"><figure class="aligncenter is-resized"><img src="https://wikimedia.org/api/rest_v1/media/math/render/svg/244681cfb37bfc62a2dfcc929371d639d67d7d09" alt="matriz" width="148" height="73" /><figcaption><em>Patrón DE-9IM</em></figcaption></div>
+  
+  
+   <br></details>
   
 <details>
   <summary><strong>Predicados espaciales</strong></summary><br>
